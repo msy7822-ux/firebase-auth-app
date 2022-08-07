@@ -4,22 +4,22 @@ import nookies from "nookies";
 import { useRouter } from "next/router";
 
 import { logout } from "../libs/firebase/utils";
-import { firebaseAdmin } from "../libs/firebase/firebaseAdmin"; // この後に実装するファイル
+import { firebaseAdmin } from "../libs/firebase/firebaseAdmin";
 
 const DashboardPage: NextPage<{ email: string }> = ({ email }) => {
   const router = useRouter();
 
   const onLogout = async () => {
-    await logout(); // ログアウトさせる
-    router.push("/login"); // ログインページへ遷移させる
+    if (confirm('ログアウトしますか？')) {
+      await logout();
+      router.push("/login");
+    }
   };
 
   return (
     <div>
       <h1>Dashboard Pages</h1>
-
       <h2>email: {email}</h2>
-
       <button onClick={onLogout}>Logout</button>
     </div>
   );
@@ -27,8 +27,7 @@ const DashboardPage: NextPage<{ email: string }> = ({ email }) => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = nookies.get(ctx);
-  // const session = cookies.session || "";
-  const session = cookies.sessions || "";
+  const session = cookies.session || "";
 
   // セッションIDを検証して、認証情報を取得する
   const user = await firebaseAdmin
@@ -36,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     .verifySessionCookie(session, true)
     .catch(() => null);
 
-  // 認証情報が無い場合は、ログイン画面へ遷移させる
+  // 認証情報が無い場合は、ログイン画面へリダイレクトさせる
   if (!user) {
     return {
       redirect: {

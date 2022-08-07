@@ -5,20 +5,16 @@ import { firebaseAdmin } from "../../libs/firebase/firebaseAdmin";
 
 // export default async function sessionApi(req: Req, res: Res) {
 const sessionApi = async (req: Req, res: Res) => {
-  // "POST"以外は、"404 Not Found"を返す
+  // POSTリクエスト以外は、"404 Not Found"を返す
   if (req.method !== "POST") return res.status(404).send("Not Found");
 
   const auth = firebaseAdmin.auth();
-
   // Tokenの有効期限
   const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5日
-
   // セッションCookieを作成するためのIDを取得
   const id = (JSON.parse(req.body).id || "").toString();
-
   // Cookieに保存するセッションIDを作成する
   const sessionCookie = await auth.createSessionCookie(id, { expiresIn });
-
   // Cookieのオプション
   const options = {
     maxAge: expiresIn,
@@ -28,8 +24,7 @@ const sessionApi = async (req: Req, res: Res) => {
   };
 
   // セッションIDをCookieに設定する
-  setCookie({ res }, "sessions", sessionCookie, options);
-
+  setCookie({ res }, "session", sessionCookie, options);
   res.send(JSON.stringify({ status: "success" }));
 }
 
