@@ -1,6 +1,6 @@
 import type { NextApiRequest as Req, NextApiResponse as Res } from "next";
-
 import { parseCookies, destroyCookie } from "nookies";
+
 import { firebaseAdmin } from "../../libs/firebase/firebaseAdmin";
 
 export default async function sessionLogoutApi(req: Req, res: Res) {
