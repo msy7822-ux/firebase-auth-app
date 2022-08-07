@@ -1,3 +1,6 @@
+// エラーメッセージの日本語化について、下記を参照
+// https://tenderfeel.xsrv.jp/javascript/3820/
+
 export const errMessageToJa = (code: string) => {
   switch (code) {
     case 'auth/cancelled-popup-request':

@@ -1,24 +1,24 @@
-import type { FormEvent } from "react";
-
+import { FormEvent, useState } from "react";
 import { NextPage } from "next";
-import { useState } from "react";
 import { useRouter } from "next/router";
-import { signup } from "../libs/firebase/utils";
 import Link from "next/link";
 
+import { signup } from "../libs/firebase/utils";
 import { errMessageToJa } from "../utils/errMessageToJa";
+import { AuthenticationForm } from "../components/AuthenticationForm";
+import { ErrorMessages } from "../components/ErrorMessages";
+import { useAuthenticationFormData } from "../hooks/useAuthenticationFormDate";
 
 const SignupPage: NextPage = () => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const [isFailed, setIsFailed] = useState(false);
   const [errMessage, setErrMessage] = useState('');
+  const { email, setEmail, password, setPassword } = useAuthenticationFormData();
 
   const onSubmit = async (event: FormEvent) => {
-    event.preventDefault(); // デフォルトの<form />の挙動を無効にする
-    await signup(email, password).then(res => {
+    event.preventDefault();
+
+    await signup(email, password).then(() => {
       setIsFailed(false);
       router.push("/dashboard"); // ダッシュボードページへ遷移させる
     }).catch(err => {
@@ -31,46 +31,20 @@ const SignupPage: NextPage = () => {
   return (
     <div>
       <h1>新規登録画面</h1>
+      <ErrorMessages isFailed={isFailed} errorMessage={errMessage} />
 
-      {isFailed && (
-        <>
-          <p>
-            <p>エラーメッセージ</p>
-            <p>{errMessage}</p>
-          </p>
-          <Link href='/login'>
-            <a>ログインページ</a>
-          </Link>
-        </>
-      )}
-      <br />
-      <br />
-      <br />
+      <AuthenticationForm
+        onSubmit={onSubmit}
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        btnText='サインアップ'
+      />
 
-      <form onSubmit={onSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-
-          <input
-            id="email"
-            value={email}
-            onInput={(e) => setEmail(e.currentTarget.value)}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="password">Password:</label>
-
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onInput={(e) => setPassword(e.currentTarget.value)}
-          />
-        </div>
-
-        <button type="submit">signup</button>
-      </form>
+      <Link href='/login'>
+        <a>ログインページはこちら</a>
+      </Link>
     </div>
   );
 };
