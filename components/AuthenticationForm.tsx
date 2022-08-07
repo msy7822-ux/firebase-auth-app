@@ -16,7 +16,7 @@ export const AuthenticationForm: FC<Props> = ({
   password,
   setPassword,
   btnText,
-}: Props) => {
+}: Props): JSX.Element => {
   return (
     <div>
       <form onSubmit={onSubmit}>

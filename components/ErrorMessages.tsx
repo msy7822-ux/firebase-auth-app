@@ -5,7 +5,10 @@ type Props = {
   errorMessage: string;
 }
 
-export const ErrorMessages: FC<Props> = ({ isFailed, errorMessage }: Props): JSX.Element | null => {
+export const ErrorMessages: FC<Props> = ({
+  isFailed,
+  errorMessage,
+}: Props): JSX.Element | null => {
   if (!isFailed) return null;
 
   return (
