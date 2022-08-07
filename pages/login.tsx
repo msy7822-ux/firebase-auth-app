@@ -10,6 +10,8 @@ import { AuthenticationForm } from "../components/AuthenticationForm";
 import { ErrorMessages } from "../components/ErrorMessages";
 import { useAuthenticationFormData } from "../hooks/useAuthenticationFormDate";
 
+import { googleLogin } from "../libs/firebase/utils";
+
 const LoginPage: NextPage = () => {
   const router = useRouter();
   const [isFailed, setIsFailed] = useState(false);
@@ -19,7 +21,7 @@ const LoginPage: NextPage = () => {
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    await login(email, password).then(() => {
+    await login(email, password).then((res) => {
       setIsFailed(false);
       router.push("/dashboard");
     }).catch(err => {
@@ -28,6 +30,19 @@ const LoginPage: NextPage = () => {
       setErrMessage(errMessageToJa(err.code) ?? '')
     });
   };
+
+  const onClickGoogleAuthBtn = async () => {
+    await googleLogin()
+      .then(() => {
+        setIsFailed(false);
+        router.push('/dashboard');
+      })
+      .catch(err => {
+        console.log(err);
+        setIsFailed(true);
+        setErrMessage(errMessageToJa(err.code) ?? '')
+      });
+  }
 
   return (
     <Wrapper>
@@ -43,9 +58,12 @@ const LoginPage: NextPage = () => {
         btnText='ログイン'
       />
 
+      <button onClick={onClickGoogleAuthBtn}>Google認証</button>
+
       <Link href='/signup'>
         <PageLink>新規登録はこちら</PageLink>
       </Link>
+
     </Wrapper>
   );
 };
