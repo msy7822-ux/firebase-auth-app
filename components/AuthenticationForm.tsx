@@ -1,4 +1,5 @@
 import { FC, FormEvent, Dispatch, SetStateAction } from "react";
+import styled from "styled-components";
 
 type Props =  {
   onSubmit: (event: FormEvent) => void;
@@ -16,34 +17,62 @@ export const AuthenticationForm: FC<Props> = ({
   password,
   setPassword,
   btnText,
-}: Props): JSX.Element => {
+}): JSX.Element => {
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
+    <Form onSubmit={onSubmit}>
+      <EmailWrapper>
+        <FormLabel htmlFor="email">Email</FormLabel>
+        <FormInput
+          id="email"
+          value={email}
+          onInput={(e) => setEmail(e.currentTarget.value)}
+        />
+      </EmailWrapper>
 
-          <input
-            id="email"
-            value={email}
-            onInput={(e) => setEmail(e.currentTarget.value)}
-          />
-        </div>
+      <PasswordWrapper>
+        <FormLabel htmlFor="password">Password</FormLabel>
+        <FormInput
+          id="password"
+          type="password"
+          value={password}
+          onInput={(e) => setPassword(e.currentTarget.value)}
+        />
+      </PasswordWrapper>
 
-        <div>
-          <label htmlFor="password">Password:</label>
-
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onInput={(e) => setPassword(e.currentTarget.value)}
-          />
-        </div>
-
-        <button type="submit">{btnText}</button>
-      </form>
-
-    </div>
+      <SubmitBtn type="submit">{btnText}</SubmitBtn>
+    </Form>
   );
 }
+
+const Form = styled.form`
+  color:#384459;
+`;
+
+const FormLabel = styled.label`
+  display: block;
+  font-weight: bold;
+`;
+
+const FormInput = styled.input`
+  border: 1px solid #384459;
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+`;
+
+const EmailWrapper = styled.div``;
+
+const PasswordWrapper = styled.div`
+  margin-top: 10px;
+`;
+
+const SubmitBtn = styled.button`
+  margin-top: 15px;
+  border: 0;
+  background-color: #384459;
+  color: white;
+  border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+  font-weight: bold;
+`;

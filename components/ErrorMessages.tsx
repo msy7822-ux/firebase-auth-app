@@ -8,7 +8,7 @@ type Props = {
 export const ErrorMessages: FC<Props> = ({
   isFailed,
   errorMessage,
-}: Props): JSX.Element | null => {
+}): JSX.Element | null => {
   if (!isFailed) return null;
 
   return (

@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import styled from "styled-components";
 
 import { signup } from "../libs/firebase/utils";
 import { errMessageToJa } from "../utils/errMessageToJa";
@@ -29,8 +30,8 @@ const SignupPage: NextPage = () => {
   };
 
   return (
-    <div>
-      <h1>新規登録画面</h1>
+    <Wrapper>
+      <Title>新規登録画面</Title>
       <ErrorMessages isFailed={isFailed} errorMessage={errMessage} />
 
       <AuthenticationForm
@@ -43,10 +44,36 @@ const SignupPage: NextPage = () => {
       />
 
       <Link href='/login'>
-        <a>ログインページはこちら</a>
+        <PageLink>ログインページはこちら</PageLink>
       </Link>
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  width: 600px;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: white;
+  margin: 40px auto;
+`;
+
+const Title = styled.h2`
+  font-size: 25px;
+  color: #384459;
+  margin-top: 0;
+  margin-bottom: 20px;
+`;
+
+const PageLink = styled.a`
+  display: block;
+  margin-top: 40px;
+  color: #384459;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.3;
+  }
+`;
 
 export default SignupPage;
