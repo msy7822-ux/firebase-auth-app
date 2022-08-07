@@ -1,8 +1,7 @@
 import type { FirebaseApp } from "firebase/app";
-import type { Auth as FirebaseAuth } from "firebase/auth";
-
 import { getApps, initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import type { Auth as FirebaseAuth } from "firebase/auth";
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,11 +14,13 @@ export const firebaseConfig = {
 };
 
 export const getFirebaseApp = (): FirebaseApp | undefined => {
+  // 今回使用するFirebaseのアプリケーション（または初期化したもの）を返す
   if (typeof window === "undefined") return; // バックエンドで実行されないようにする
 
   return getApps()[0] || initializeApp(firebaseConfig);
 };
 
 export const getFirebaseAuth = (): FirebaseAuth => {
+  // Firebaseのアプリケーションに紐ずく認証のオブジェクト（Authオブジェクト）を返す
   return getAuth(getFirebaseApp());
 };

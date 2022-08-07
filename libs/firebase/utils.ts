@@ -1,16 +1,24 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirebaseAuth } from "./config";
 
-export const login = async (email: string, password: string) => {
+
+export const signup = async (email: string, password: string) => {
+  const auth = getFirebaseAuth();
+  const result = await createUserWithEmailAndPassword(auth, email, password);
+
+  const id = await result.user.getIdToken();
+  // Cookieにセッションを付与するようにAPIを投げる
+  await fetch("/api/session", { method: "POST", body: JSON.stringify({ id }) });
+}
+
+export const login = async (email: string, password: string)=> {
   // FirebaseAuthを取得する
   const auth = getFirebaseAuth();
 
   // メールアドレスとパスワードでログインする
   const result = await signInWithEmailAndPassword(auth, email, password);
-
   // セッションIDを作成するためのIDを作成する
   const id = await result.user.getIdToken();
-
   // Cookieにセッションを付与するようにAPIを投げる
   await fetch("/api/session", { method: "POST", body: JSON.stringify({ id }) });
 };
