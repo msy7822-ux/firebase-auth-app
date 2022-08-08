@@ -29,13 +29,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const cookies = nookies.get(ctx);
   const session = cookies.session || "";
 
-  // セッションIDを検証して、認証情報を取得する（どのページでも必要 = _app.tsxに移動する）
   const user = await firebaseAdmin
     .auth()
     .verifySessionCookie(session, true)
     .catch(() => null);
 
-  // 認証情報が無い場合は、ログイン画面へリダイレクトさせる
   if (!user) {
     return {
       redirect: {
