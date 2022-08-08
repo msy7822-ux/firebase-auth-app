@@ -1,14 +1,17 @@
 import { FormEvent, useState } from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import styled from "styled-components";
 
 import { signup } from "../libs/firebase/utils";
 import { errMessageToJa } from "../utils/errMessageToJa";
 import { AuthenticationForm } from "../components/AuthenticationForm";
 import { ErrorMessages } from "../components/ErrorMessages";
 import { useAuthenticationFormData } from "../hooks/useAuthenticationFormDate";
+import { GoogleAuthButton } from '../components/GoogleAuthButton';
+import { googleLogin } from "../libs/firebase/utils";
+import { Title } from "../components/Title";
+import { PageLink } from "../components/PageLink";
+import { Container } from "../components/Container";
 
 const SignupPage: NextPage = () => {
   const router = useRouter();
@@ -29,11 +32,24 @@ const SignupPage: NextPage = () => {
     });
   };
 
-  return (
-    <Wrapper>
-      <Title>新規登録画面</Title>
-      <ErrorMessages isFailed={isFailed} errorMessage={errMessage} />
+  const onClickGoogleAuthBtn = async () => {
+    await googleLogin()
+      .then(() => {
+        setIsFailed(false);
+        router.push('/dashboard');
+      })
+      .catch(err => {
+        console.log(err);
+        setIsFailed(true);
+        setErrMessage(errMessageToJa(err.code) ?? '')
+      });
+  }
 
+  return (
+    <Container>
+      <Title text='新規登録画面' />
+      <ErrorMessages isFailed={isFailed} errorMessage={errMessage} />
+      <GoogleAuthButton onClick={onClickGoogleAuthBtn} />
       <AuthenticationForm
         onSubmit={onSubmit}
         email={email}
@@ -42,38 +58,9 @@ const SignupPage: NextPage = () => {
         setPassword={setPassword}
         btnText='サインアップ'
       />
-
-      <Link href='/login'>
-        <PageLink>ログインページはこちら</PageLink>
-      </Link>
-    </Wrapper>
+      <PageLink href='/login' linkText="ログインページはこちら"/>
+    </Container>
   );
 };
-
-const Wrapper = styled.div`
-  width: 600px;
-  padding: 15px;
-  border-radius: 5px;
-  background-color: white;
-  margin: 40px auto;
-`;
-
-const Title = styled.h2`
-  font-size: 25px;
-  color: #384459;
-  margin-top: 0;
-  margin-bottom: 20px;
-`;
-
-const PageLink = styled.a`
-  display: block;
-  margin-top: 40px;
-  color: #384459;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.3;
-  }
-`;
 
 export default SignupPage;

@@ -24,6 +24,7 @@ export const AuthenticationForm: FC<Props> = ({
         <FormLabel htmlFor="email">Email</FormLabel>
         <FormInput
           id="email"
+          type='email'
           value={email}
           onInput={(e) => setEmail(e.currentTarget.value)}
         />

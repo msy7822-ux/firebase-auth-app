@@ -14,13 +14,11 @@ export const firebaseConfig = {
 };
 
 export const getFirebaseApp = (): FirebaseApp | undefined => {
-  // 今回使用するFirebaseのアプリケーション（または初期化したもの）を返す
   if (typeof window === "undefined") return;
 
   return getApps()[0] || initializeApp(firebaseConfig);
 };
 
 export const getFirebaseAuth = (): FirebaseAuth => {
-  // Firebaseのアプリケーションに紐づく認証のオブジェクト（Authオブジェクト）を返す
   return getAuth(getFirebaseApp());
 };
